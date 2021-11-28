@@ -17,12 +17,12 @@ Vue.use(VueRouter);
 const routes = [
     { path: '/',
       component: Table,
-      props: route => ({ initialSelected: "" })
+      props: route => ({ initialColumns: "", initialRows: "" })
       // props: true
     },
     { path: '/search',
       component: Table,
-      props: route => ({ initialSelected: route.query.table })
+      props: route => ({ initialColumns: route.query.table, initialRows: route.query.row })
       // props: true
     }
 ]

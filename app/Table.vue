@@ -131,7 +131,14 @@ export default {
                 this.selectedRows = [];
             };
             this.selectedColumns = newSel;
-            this.$router.push({ path: 'search', query: { table: encodeURIComponent(this.selectedColumns) }})
+            this.$router.push(
+                { path: 'search',
+                  query: {
+                      table: encodeURIComponent(this.selectedColumns),
+                      row: encodeURIComponent(this.selectedRows)
+                  }
+                }
+            )
         },
         selectEntry: function(colId, row) {
             let colPos = this.selectedColumns.indexOf(colId)
@@ -139,7 +146,14 @@ export default {
             
             let rowPos = this.selectedRows.indexOf(row)
             if (rowPos == -1) { this.selectedRows.push(row) }
-            this.$router.push({ path: 'search', query: { table: encodeURIComponent(this.selectedColumns) }})
+            this.$router.push(
+                { path: 'search',
+                  query: {
+                      table: encodeURIComponent(this.selectedColumns),
+                      row: encodeURIComponent(this.selectedRows)
+                  }
+                }
+            )
         },
         columnId: function(col) {
             return col[0]["column"]
@@ -181,20 +195,27 @@ export default {
         Search
     },
     props: {
-        initialSelected: String
+        initialColumns: String,
+        initialRows: String
     },
     data() {
-        let selected
+        let columns
+        let rows
         try {
-            if ( this.$props.initialSelected ) {
-                selected = decodeURIComponent(this.$props.initialSelected).split(",") ?? []
+            if ( this.$props.initialColumns ) {
+                columns = decodeURIComponent(this.$props.initialColumns).split(",") ?? []
             } else {
-                selected = []
+                columns = []
             }
+            if ( this.$props.initialRows ) {
+                rows = decodeURIComponent(this.$props.initialRows).split(",") ?? []
+            } else {
+                rows = []
+            } 
             return {
-                selectedColumns: selected,
+                selectedColumns: columns,
                 viewAll: true,
-                selectedRows: []
+                selectedRows: rows
             };
         } catch (error) {
             return {
