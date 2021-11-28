@@ -5,14 +5,13 @@
     "main": "index.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
-        "dev": "webpack serve",
+        "dev": "webpack serve --history-api-fallback",
         "build": "webpack",
         "start": "node index.js"
-           
     },
     "repository": {
         "type": "git",
-        "url": "git+ssh://git@github.com/ccarlile/streamseven.git"
+        "url": "git+ssh://git@github.com/victorseevaden/streamseven.git"
     },
     "keywords": [
         "93",
@@ -30,6 +29,7 @@
         "express": "^4.17.1",
         "fuse.js": "^6.4.6",
         "lowdb": "^1.0.0",
+        "vue-router": "^3.5.3",
         "vuex": "^3.5.1"
     },
     "devDependencies": {

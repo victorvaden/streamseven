@@ -6,14 +6,17 @@
   <div v-if="results" class="results-container">
     <ul id="search-results" v-if="search">
       <li
-        v-for="result in results"
+        v-bind:key="result.item.row + result.item.column + index"
+        v-for="(result, index) in results"
         v-on:click="confirmResult(result.item)">
-        <span class="result-entry">{{ result.item.entry }}</span>
-        <span class="result-extra">{{ result.item.column }}</span>
-        <span class="result-row">{{ result.item.row }}</span>
-        <span class="result-columnName">{{ result.item.columnName }}</span>
-        <!-- {{ result.row }} {{ result.entry }} {{ result.columnName }} -->
-      </li>
+          <span class="result-entry">{{ result.item.entry }}</span>
+          <span class="result-extra">{{ result.item.column }}</span>
+          <span class="result-row">{{ result.item.row }}</span>
+          <span class="result-columnName">{{ result.item.columnName }}</span>
+          <!-- {{ result.row }} {{ result.entry }} {{ result.columnName }} -->
+        </li>
+
+      <!-- </router-link> -->
     </ul>
   </div>
 </div>

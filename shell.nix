@@ -4,6 +4,6 @@ pkgs.mkShell {
   buildInputs = [
     pkgs.nodejs
     pkgs.heroku
-    # pkgs.nodePackages.webpack-cli
+    pkgs.nodePackages.vls
   ];
 }

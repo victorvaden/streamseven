@@ -10,8 +10,7 @@ const tableData =
                   "column": col["column"],
                   "columnName": col["columnName"],
                   "row": entry
-              } )
-                  )
+              } ))
       );
 
 const columnEntries =
@@ -34,8 +33,6 @@ const columns =
 const flatData = tableData.flat()
 
 const allSearch = flatData.concat(columnEntries).concat(columns)
-
-console.log(allSearch)
 
 const options = { keys: [ "entry" ] }
 

@@ -41,6 +41,7 @@ var config = {
     ],
     devServer: {
         contentBase: path.join(__dirname, '/dist'),
+        historyApiFallback: true,
         watchContentBase: true,
         port: 5000,
         host: '0.0.0.0',

@@ -10,11 +10,12 @@
                  v-if="viewAll"
                  src="./eye_closed.png">
             <img v-on:click="toggleVisibility()"
-                 v-else="viewAll"
+                 v-else
                  src="./eye.png">
           </th>
           
           <th class="key"
+              v-bind:key="columnId(column)"
               v-for="column in visibleColumns"
               v-bind:class="columnKeyStatus(columnId(column))"
               v-on:click="deselectColumn(columnId(column))">
@@ -25,9 +26,10 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="rowKey in visibleRowKeys">
+        <tr v-for="rowKey in visibleRowKeys" v-bind:key="rowKey[0]">
           <td v-bind:class="[rowKey[1], 'key', 'key-scale' ].join(' ')">{{ rowKey[0] }}</td>
           <td v-for="column in visibleColumns"
+              v-bind:key="columnId(column)" 
               v-bind:class="entryStatus(rowKey[0], column)" 
               v-on:click="selectEntry(columnId(column), rowKey[0])">
             <div v-text="display(column.find(r => r.row == rowKey[0]))"></div>
@@ -40,6 +42,7 @@
 </template>
 
 <script>
+  
 import Search from './Search.vue';
 
 const rowKeys = [
@@ -66,7 +69,6 @@ export default {
             if (this.viewAll) {
                 return rowKeys
             } else {
-                console.log(rowKeys, this.selectedRows);
                 return rowKeys.filter(k => this.selectedRows.indexOf(k[0]) > -1)
             }
         }
@@ -121,20 +123,23 @@ export default {
             } 
         },
         deselectColumn: function(colId) {
-            this.selectedColumns = this.selectedColumns.filter(col => col != colId)
-            if (this.selectedColumns.length == 0) {
+            let selected = this.selectedColumns
+            let newSel = this.selectedColumns.filter(c => c != colId)
+            let newQuery = newSel.join(",")
+            if (newSel.length == 0) {
                 this.viewAll = true;
                 this.selectedRows = [];
             };
+            this.selectedColumns = newSel;
+            this.$router.push({ path: 'search', query: { table: encodeURIComponent(this.selectedColumns) }})
         },
         selectEntry: function(colId, row) {
-            // let colId = this.columnId(column)
             let colPos = this.selectedColumns.indexOf(colId)
-            let rowPos = this.selectedRows.indexOf(row)
-
-
             if (colPos == -1) { this.selectedColumns.push(colId) }
+            
+            let rowPos = this.selectedRows.indexOf(row)
             if (rowPos == -1) { this.selectedRows.push(row) }
+            this.$router.push({ path: 'search', query: { table: encodeURIComponent(this.selectedColumns) }})
         },
         columnId: function(col) {
             return col[0]["column"]
@@ -169,21 +174,35 @@ export default {
             }
         },
         setResult: function(result) {
-        //     let id = `entry-${result.column}:${rowId}`
             this.selectEntry(result.column, result.row);
-        //     let elt = document.getElementById(id);
-        //     elt.scrollIntoView();
         }
     },
     components: {
         Search
     },
+    props: {
+        initialSelected: String
+    },
     data() {
-        return {
-            viewAll: true,
-            selectedColumns: [],
-            selectedRows: []
-        };
+        let selected
+        try {
+            if ( this.$props.initialSelected ) {
+                selected = decodeURIComponent(this.$props.initialSelected).split(",") ?? []
+            } else {
+                selected = []
+            }
+            return {
+                selectedColumns: selected,
+                viewAll: true,
+                selectedRows: []
+            };
+        } catch (error) {
+            return {
+                selectedColumns: [],
+                viewAll: true,
+                selectedRows: []
+            };
+        }
     }
 };
 </script>
@@ -219,8 +238,6 @@ export default {
         background-color: #eee;
         border-bottom: 1px solid #fff;
         z-index: 5;
-    }
-    #table-container {
     }
     td.key {
         background-color: #eee;
