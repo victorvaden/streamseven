@@ -142,10 +142,17 @@ export default {
         },
         selectEntry: function(colId, row) {
             let colPos = this.selectedColumns.indexOf(colId)
-            if (colPos == -1) { this.selectedColumns.push(colId) }
+            if (colPos == -1) {
+                this.selectedColumns.push(colId)
+            } 
             
             let rowPos = this.selectedRows.indexOf(row)
-            if (rowPos == -1) { this.selectedRows.push(row) }
+            console.log("rowPos was", rowPos)
+            if (rowPos == -1) {
+                this.selectedRows.push(row) }
+            else { 
+                this.selectedRows.splice(colPos, 1)
+            }
             this.$router.push(
                 { path: 'search',
                   query: {
@@ -166,6 +173,14 @@ export default {
             } else {
                 this.selectedRows.push(row)
             }
+            this.$router.push(
+                { path: 'search',
+                  query: {
+                      table: encodeURIComponent(this.selectedColumns),
+                      row: encodeURIComponent(this.selectedRows)
+                  }
+                }
+            )
         },
         rowKeyName: function(rowKey) {
             switch(rowKey) {
@@ -189,6 +204,18 @@ export default {
         },
         setResult: function(result) {
             this.selectEntry(result.column, result.row);
+        },
+        setRouter: function() {
+            this.$router.push(
+                { path: 'search',
+                  query: {
+                      table: encodeURIComponent(this.selectedColumns),
+                      row: encodeURIComponent(this.selectedRows)
+                  }
+                }
+            )
+            
+            
         }
     },
     components: {
@@ -234,10 +261,11 @@ export default {
   }
     table {
         border: 1px solid #eee;
+        position: relative;
     }
     thead {
         position: sticky;
-        top: 0px;
+        top: 48px;
         height: 10vh;
     }
     td {
@@ -276,7 +304,9 @@ export default {
     #app-table {
         font-size: 18px;
         font-family: 'Roboto', sans-serif;
-        position: absolute;
+        /* position: absolute; */
+        overflow: auto;
+        display: block;
         width: 100%;
         left: 0px;
         top: 0px;
